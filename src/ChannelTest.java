@@ -2,13 +2,15 @@ import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.RandomAccess;
 
 /**
  * @Description
@@ -28,6 +30,11 @@ import java.nio.file.StandardOpenOption;
  *      transferFrom()
  *      transferTo()
  *
+ * 五. 分散读取Scatter和聚集写入Gather
+ *      分散读取:将通道中的数据分散到多个缓冲区中
+ *      聚集写入:
+ *
+ * 六. Charset解码编码
  * @Tips
  * @Author yikai.wang
  * @Date 2019/12/3 14:26
@@ -76,13 +83,15 @@ public class ChannelTest {
         MappedByteBuffer inMapBuffer = null;
         MappedByteBuffer outMapBuffer = null;
         try {
-            inChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Documents\\身后空无一人.txt"),StandardOpenOption.READ);
+            inChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\cc.txt"),StandardOpenOption.READ);
             outChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\人人.txt"),StandardOpenOption.WRITE,StandardOpenOption.READ,StandardOpenOption.CREATE);
 
             inMapBuffer = inChannel.map(FileChannel.MapMode.READ_ONLY, 0, inChannel.size());
             outMapBuffer = outChannel.map(FileChannel.MapMode.READ_WRITE, 0, outChannel.size());
 
-            byte[] temp = new byte[inMapBuffer.limit()];
+            System.out.println(inChannel.size());
+
+            byte[] temp = new byte[1024];
             inMapBuffer.get(temp);
             outMapBuffer.put(temp);
 
@@ -112,6 +121,40 @@ public class ChannelTest {
         }finally {
             CommonUtil.release(null,null,inChannel,outChannel);
         }
+    }
+
+    //分散读取  聚集写入
+    @Test
+    public void test4(){
+        long start = System.currentTimeMillis();
+        FileChannel inChannel = null;
+        FileChannel outChannel = null;
+        //分散读取  聚集写入
+        try {
+            RandomAccessFile inFile = new RandomAccessFile("C:\\Users\\yikai.wang\\Pictures\\聚集写入.txt","rw");
+            inChannel = inFile.getChannel();
+
+            ByteBuffer buffer1 = ByteBuffer.allocate(1024);
+            ByteBuffer buffer2 = ByteBuffer.allocate(1024);
+
+            ByteBuffer[] buffers = {buffer1,buffer2};
+            inChannel.read(buffers);
+            for (ByteBuffer t : buffers){
+                t.flip();
+            }
+
+            RandomAccessFile outFile = new RandomAccessFile("C:\\Users\\yikai.wang\\Pictures\\写入2.txt","rw");
+            outChannel = outFile.getChannel();
+            outChannel.write(buffers);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            CommonUtil.release(null,null,inChannel,outChannel);
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end - start);
+
     }
 
 }
