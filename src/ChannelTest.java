@@ -52,19 +52,20 @@ public class ChannelTest {
         FileChannel inchannel = null;
         FileChannel outchannel = null;
         try {
-            inputStream = new FileInputStream("C:\\Users\\yikai.wang\\Pictures\\人人.txt");
-            outputStream = new FileOutputStream("C:\\Users\\yikai.wang\\Pictures\\cc.txt");
+            inputStream = new FileInputStream("C:\\Users\\yikai.wang\\Pictures\\cc.txt");
+            outputStream = new FileOutputStream("C:\\Users\\yikai.wang\\Pictures\\1209.txt");
 
             inchannel = inputStream.getChannel();
             outchannel = outputStream.getChannel();
 
+            //这个时候需要一个buffer来暂存数据
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             while (inchannel.read(buffer) != -1){
                 buffer.flip();
                 outchannel.write(buffer);
                 buffer.clear();
             }
-
+            System.out.println("输出完成");
         }catch (Exception e){
             e.printStackTrace();
         }finally {

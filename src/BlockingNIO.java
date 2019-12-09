@@ -23,48 +23,51 @@ public class BlockingNIO {
 
     @Test
     public void client(){
-        FileChannel inChannel = null;
         SocketChannel socketChannel = null;
+        FileChannel inChannel = null;
         try {
-            socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9898));
-            inChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\cc.txt"), StandardOpenOption.READ);
+            socketChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1",9898));
+            inChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\cc.txt"),StandardOpenOption.READ);
 
             ByteBuffer buffer = ByteBuffer.allocate(1024);
+
             while (inChannel.read(buffer) != -1){
                 buffer.flip();
                 socketChannel.write(buffer);
                 buffer.clear();
             }
-            socketChannel.close();
-            System.out.println("上传完成");
+            System.out.println("输入完成");
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            CommonUtil.close(socketChannel,null);
             CommonUtil.release(null,null,inChannel,null);
         }
     }
 
+
     @Test
     public void server(){
         ServerSocketChannel serverSocketChannel = null;
+        SocketChannel accept = null;
         FileChannel outChannel = null;
         try {
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.bind(new InetSocketAddress(9898));
-            SocketChannel accept = serverSocketChannel.accept();
-            outChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\copy.txt"),StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+            accept = serverSocketChannel.accept();
             ByteBuffer buffer = ByteBuffer.allocate(1024);
+            outChannel = FileChannel.open(Paths.get("C:\\Users\\yikai.wang\\Pictures\\server.txt"),StandardOpenOption.WRITE,StandardOpenOption.CREATE);
+
             while (accept.read(buffer) != -1){
                 buffer.flip();
                 outChannel.write(buffer);
                 buffer.clear();
             }
-            accept.close();
-            serverSocketChannel.close();
-            System.out.println("接收完成");
+            System.out.println("输出完成");
         }catch (Exception e){
             e.printStackTrace();
         }finally {
+            CommonUtil.close(accept,serverSocketChannel);
             CommonUtil.release(null,null,null,outChannel);
         }
     }

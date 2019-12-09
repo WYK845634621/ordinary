@@ -2,6 +2,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 
 /**
  * @Description
@@ -38,6 +40,25 @@ public class CommonUtil {
                 outputStream.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public static void close(SocketChannel socketChannel, ServerSocketChannel serverSocketChannel){
+        if (socketChannel != null){
+            try {
+                socketChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (serverSocketChannel != null){
+            try {
+                serverSocketChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
