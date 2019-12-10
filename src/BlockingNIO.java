@@ -71,5 +71,11 @@ public class BlockingNIO {
             CommonUtil.release(null,null,null,outChannel);
         }
     }
+
+    @Test
+    public void trestst(){
+        Integer i = 8;
+        System.out.println(i.toString());
+    }
 }
 
