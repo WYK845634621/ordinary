@@ -1,4 +1,7 @@
+package NIO;
+
 import org.junit.Test;
+import util.CommonUtil;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,9 +11,6 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.RandomAccess;
 
 /**
  * @Description
