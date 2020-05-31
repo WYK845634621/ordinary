@@ -11,10 +11,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @Description 守护线程是运行在后台的一种特殊线程,它独立于控制终端并且周期性的执行某种任务或等待处理某些发生的事件,
@@ -24,6 +21,11 @@ import java.util.concurrent.TimeUnit;
  * @Date 2019/12/25 14:09
  */
 public class CommonTest {
+
+    public static void main(String[] args) {
+        System.out.println("hello");
+    }
+
     @Test
     public void test() {
 
@@ -361,7 +363,7 @@ public class CommonTest {
 
     @Test
     public void test26(){
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(3, 8, 5, TimeUnit.SECONDS,
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(3, 8, 5, TimeUnit.MINUTES,
                 new ArrayBlockingQueue<>(3),
                 Executors.defaultThreadFactory(),
                 new ThreadPoolExecutor.AbortPolicy());
@@ -414,6 +416,39 @@ public class CommonTest {
         for (String s : del){
             System.out.println(s);
         }
+    }
+
+
+    @Test
+    public void test30(){
+        List<Integer> list = new ArrayList<>();
+        int size = 212;
+        for (int i = 0; i < 212; i++) {
+            list.add(i);
+        }
+        List<Integer> s = list.subList(210, size);
+        for (int i = 0; i <s.size(); i++) {
+            System.out.println(s.get(i));
+        }
+    }
+
+    @Test
+    public void test31() throws ParseException {
+        Calendar temp = Calendar.getInstance();
+        SimpleDateFormat sdf2  = new SimpleDateFormat("yyyyMMdd");
+        temp.setTime(sdf2.parse("20191213"));
+        Calendar bound = Calendar.getInstance();
+        bound.add(Calendar.DATE,-70);
+        System.out.println(temp.before(bound));
+    }
+
+
+    @Test
+    public void test32(){
+        List<String> list = Collections.synchronizedList(new ArrayList<String>());
+        list.add("hello");
+
+        new CopyOnWriteArrayList<String>();
     }
 
 
